@@ -10,7 +10,7 @@ services:
       - ./.env
 
   web:
-    image: sapa322/yamdb_final:latest
+    image: sapa322/api_yamdb:latest
     restart: always
     volumes:
       - static_value:/app/static/
