@@ -60,16 +60,23 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker-compose stop
-            sudo docker-compose rm web
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/api_yamdb
+            sudo docker stop $(sudo docker ps -a -q)
+            sudo docker-compose down -v
             touch .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+            echo DEBUG=${{ secrets.DEBUG }} >> .env
+            echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-            sudo docker-compose up -d 
+            echo LOCALHOST=${{ secrets.LOCALHOST }} >> .env
+            echo PORT=${{ secrets.PORT }} >> .env
+            echo UPSTREAM=${{ secrets.UPSTREAM }} >> .env
+            sudo docker-compose up -d
   send_message:
     name: Send message to Telegram
     runs-on: ubuntu-latest
